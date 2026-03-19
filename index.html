@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Salami Spinner</title>
+    <style>
+        body {
+            background-color: #0d3b2a;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .title { color: #f9d835; font-size: 2.2rem; margin-bottom: 5px; }
+        .wheel-box { position: relative; display: inline-block; margin-top: 20px; }
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            color: #f9d835;
+            z-index: 10;
+        }
+        canvas {
+            border: 8px solid #f9d835;
+            border-radius: 50%;
+            max-width: 90vw;
+            max-height: 90vw;
+        }
+        #spinBtn {
+            margin-top: 30px;
+            padding: 15px 60px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background-color: #f9d835;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 class="title">Salami Diben Koto?</h1>
+        <p>Spin the wheel to claim your Eid Salami! 💸</p>
+        <div class="wheel-box">
+            <div class="pointer">▼</div>
+            <canvas id="wheel" width="350" height="350"></canvas>
+        </div>
+        <br>
+        <button id="spinBtn" onclick="spin()">SPIN NOW!</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const options = [
+            { label: "Dua", color: "#ffcc00" },
+            { label: "100 tk", color: "#00f2ff" },
+            { label: "50 tk", color: "#ff0080" },
+            { label: "10 tk", color: "#2e5bff" },
+            { label: "5 tk", color: "#00ff40" },
+            { label: "2 tk", color: "#ff4d4d" }
+        ];
+
+        const numOptions = options.length;
+        const arcSize = (2 * Math.PI) / numOptions;
+        let currentRotation = 0;
+
+        function drawWheel() {
+            options.forEach((opt, i) => {
+                const angle = i * arcSize;
+                ctx.beginPath();
+                ctx.fillStyle = opt.color;
+                ctx.moveTo(175, 175);
+                ctx.arc(175, 175, 175, angle, angle + arcSize);
+                ctx.fill();
+                ctx.save();
+                ctx.translate(175, 175);
+                ctx.rotate(angle + arcSize / 2);
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 18px Arial";
+                ctx.textAlign = "right";
+                ctx.fillText(opt.label, 160, 10);
+                ctx.restore();
+            });
+        }
+
+        function spin() {
+            const extraDegrees = Math.floor(Math.random() * 360) + 3600;
+            currentRotation += extraDegrees;
+            canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)';
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+        }
+        drawWheel();
+    </script>
+</body>
+</html>
